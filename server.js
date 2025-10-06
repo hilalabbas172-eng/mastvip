@@ -3,20 +3,22 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-const dotenv = require('dotenv');
-const bcrypt = require('bcrypt'); // يجب أن تكون الحزمة مُثبتة (npm install bcrypt)
-const session = require('express-session'); // يجب أن تكون الحزمة مُثبتة (npm install express-session)
-const MongoStore = require('connect-mongo'); // يجب أن تكون الحزمة مُثبتة (npm install connect-mongo)
+// const dotenv = require('dotenv'); // 👈 تم حذف/تعطيل هذا السطر
+const bcrypt = require('bcrypt');
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
 
-dotenv.config();
+// dotenv.config(); // 👈 تم حذف/تعطيل هذا السطر
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI;
-// المفتاح السري المحدث الذي يجب أن يكون MASTER_VIP_SECRET_KEY في Render
+// قراءة المتغيرات مباشرة من بيئة Render
+const MONGO_URI = process.env.MONGO_URI; 
 const SESSION_SECRET = process.env.MASTER_VIP_SECRET_KEY || 'default_secret_key_fallback'; 
+// 🚨 يجب أن يكون MASTER_VIP_SECRET_KEY هو اسم المتغير في Render 🚨
 
-// 🚨 1. إعداد الـ Proxy (الحل الأخير لمشكلة الجلسات) 🚨
+
+// 1. إعداد الـ Proxy (لتوافق Render) 
 app.set('trust proxy', 1); 
 
 // 2. الاتصال بقاعدة البيانات
@@ -36,8 +38,7 @@ const sessionConfig = {
     }),
     cookie: {
         httpOnly: true,
-        // 🚨 تفعيل Secure: true للعمل مع HTTPS على Render 🚨
-        secure: true, 
+        secure: true, // تفعيل Secure للعمل مع HTTPS على Render 
         maxAge: 1000 * 60 * 60 * 24 * 7 
     }
 };
@@ -78,11 +79,9 @@ const isAdmin = async (req, res, next) => {
     }
 };
 
-// دالة حماية الوكيل المالي 
 const isAgentWithFundsAccess = async (req, res, next) => {
     try {
         const user = await User.findById(req.session.userId);
-        // يجب أن يكون وكيل ولديه صلاحية الإدارة المالية
         if (user && user.isAgent && user.canManageClientFunds) {
             next();
         } else {
@@ -101,7 +100,6 @@ app.get('/', (req, res) => {
 });
 
 app.get('/auth', (req, res) => {
-    // تمرير رسالة الخطأ لتظهر في حال فشل التسجيل
     res.render('auth', { registered: req.query.registered, error: req.query.error }); 
 });
 
@@ -113,12 +111,10 @@ app.get('/profile', isAuthenticated, async (req, res) => {
             return res.redirect('/auth');
         }
         
-        // 🚨 توجيه الوكيل مباشرة إلى لوحته الخاصة 🚨
         if (user.isAgent && user.canManageClientFunds) {
             return res.redirect('/agent-dashboard'); 
         }
 
-        // عرض عادي للمستخدمين العاديين
         res.render('profile', { user });
 
     } catch (err) {
@@ -126,7 +122,6 @@ app.get('/profile', isAuthenticated, async (req, res) => {
     }
 });
 
-// مسار عرض لوحة تحكم الوكيل المالي
 app.get('/agent-dashboard', isAuthenticated, isAgentWithFundsAccess, async (req, res) => {
     try {
         const user = await User.findById(req.session.userId);
@@ -177,7 +172,6 @@ app.post('/login', async (req, res) => {
 
         req.session.userId = user._id;
 
-        // 🚨 التوجيه الصحيح بناءً على نوع المستخدم 🚨
         if (user.isAdmin) {
             res.redirect('/admin');
         } else if (user.isAgent && user.canManageClientFunds) {
@@ -192,13 +186,11 @@ app.post('/login', async (req, res) => {
 });
 
 
-// 🚨 8.1 التسجيل العادي 🚨
+// مسار التسجيل العادي (للعملاء غير المسجلين عبر وكيل)
 app.post('/register', async (req, res) => {
     try {
         const { username, password, referrerCode } = req.body;
         
-        // ... (منطق التحقق من البيانات وتشفير كلمة المرور) ...
-
         const hashedPassword = await bcrypt.hash(password, 10);
         
         let referrerId = null;
@@ -211,8 +203,16 @@ app.post('/register', async (req, res) => {
             }
         }
 
+        // منطق توليد كود إحالة فريد
         let referralCodeUnique;
-        // ... (منطق توليد كود إحالة فريد) ...
+        let codeExists = true;
+        while (codeExists) {
+            referralCodeUnique = Math.random().toString(36).substring(2, 8).toUpperCase();
+            const check = await User.findOne({ referralCode: referralCodeUnique });
+            if (!check) {
+                codeExists = false;
+            }
+        }
 
         const newUser = new User({
             username,
@@ -234,7 +234,7 @@ app.post('/register', async (req, res) => {
     }
 });
 
-// 🚨 8.2 مسار تسجيل عميل بواسطة الوكيل المالي 🚨
+// مسار تسجيل عميل بواسطة الوكيل المالي 
 app.post('/agent/register-client', isAuthenticated, isAgentWithFundsAccess, async (req, res) => {
     try {
         const { clientUsername, clientPassword } = req.body;
@@ -283,7 +283,7 @@ app.post('/agent/register-client', isAuthenticated, isAgentWithFundsAccess, asyn
 });
 
 
-// 🚨 8.3 مسار إيداع العملاء بواسطة الوكيل المالي (20% عمولة) 🚨
+// مسار إيداع العملاء بواسطة الوكيل المالي (20% عمولة) 
 app.post('/agent/deposit', isAuthenticated, isAgentWithFundsAccess, async (req, res) => {
     try {
         const { clientUsername, amount } = req.body;
@@ -320,7 +320,7 @@ app.post('/agent/deposit', isAuthenticated, isAgentWithFundsAccess, async (req, 
 });
 
 
-// 🚨 8.4 مسار سحب العملاء بواسطة الوكيل المالي (10% عمولة) 🚨
+// مسار سحب العملاء بواسطة الوكيل المالي (10% عمولة) 
 app.post('/agent/withdraw', isAuthenticated, isAgentWithFundsAccess, async (req, res) => {
     try {
         const { clientUsername, amount } = req.body;
