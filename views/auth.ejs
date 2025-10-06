@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master VIP - Login & Register</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #000; color: #fff; font-family: 'Arial', sans-serif; text-align: center;">
+
+    <nav style="display: flex; justify-content: center; padding: 15px 0; background-color: #000; border-bottom: 2px solid #FFD700;">
+        <a href="/" style="color: #FFD700; text-decoration: none; padding: 0 15px; font-weight: bold; transition: color 0.3s; margin: 0 5px; font-family: 'Arial', sans-serif;">Home</a>
+        <a href="/auth" style="color: #FFD700; text-decoration: none; padding: 0 15px; transition: color 0.3s; margin: 0 5px; font-family: 'Arial', sans-serif;">Login/Register</a>
+        <a href="/vip" style="color: #FFD700; text-decoration: none; padding: 0 15px; transition: color 0.3s; margin: 0 5px; font-family: 'Arial', sans-serif;">VIP Levels</a>
+        <a href="/referrals" style="color: #FFD700; text-decoration: none; padding: 0 15px; transition: color 0.3s; margin: 0 5px; font-family: 'Arial', sans-serif;">Referrals</a>
+        <a href="/profile" style="color: #FFD700; text-decoration: none; padding: 0 15px; transition: color 0.3s; margin: 0 5px; font-family: 'Arial', sans-serif;">Profile</a>
+        <a href="/support" style="color: #FFD700; text-decoration: none; padding: 0 15px; transition: color 0.3s; margin: 0 5px; font-family: 'Arial', sans-serif;">Support</a>
+    </nav>
+
+    <div style="display: flex; justify-content: center; align-items: center; min-height: 80vh;">
+        <div style="background-color: #111; padding: 40px; border-radius: 10px; width: 350px; box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); text-align: center;">
+            <h2 style="color: #FFD700; margin-bottom: 30px;">Member Login</h2>
+            <form action="#" method="POST" style="display: flex; flex-direction: column; gap: 20px;">
+                <input type="text" placeholder="Username" required 
+                       style="padding: 12px; border: 1px solid #333; border-radius: 5px; background-color: #000; color: #fff; font-size: 1em;">
+                <input type="password" placeholder="Password" required 
+                       style="padding: 12px; border: 1px solid #333; border-radius: 5px; background-color: #000; color: #fff; font-size: 1em;">
+                <button type="submit" 
+                        style="padding: 12px; background-color: #FFD700; color: #000; border: none; border-radius: 5px; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: background-color 0.3s, box-shadow 0.3s; box-shadow: 0 0 8px rgba(255, 215, 0, 0.7);">
+                    Login
+                </button>
+            </form>
+            
+            <p style="color: #ccc; margin-top: 30px; margin-bottom: 15px;">New user?</p>
+
+            <button onclick="alert('Redirecting to Registration form...')" 
+                    style="padding: 12px 30px; background-color: #FFD700; color: #000; border: none; border-radius: 5px; font-size: 1em; font-weight: bold; cursor: pointer; transition: background-color 0.3s, box-shadow 0.3s; box-shadow: 0 0 8px rgba(255, 215, 0, 0.7);">
+                Register
+            </button>
+        </div>
+    </div>
+</body>
+</html>

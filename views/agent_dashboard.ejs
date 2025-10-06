@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>لوحة تحكم الوكيل - Master VIP</title>
+    <style>
+        body { background-color: #0d0d0d; color: #fff; font-family: Arial, sans-serif; }
+        .container { max-width: 800px; margin: 50px auto; padding: 20px; background-color: #1a1a1a; border-radius: 10px; }
+        h1 { color: #FFD700; border-bottom: 2px solid #FFD700; padding-bottom: 10px; }
+        .agent-info { background-color: #2c2c2c; padding: 15px; border-radius: 6px; margin-bottom: 20px; }
+        .form-section { background-color: #1a1a1a; padding: 20px; border-radius: 8px; margin-top: 20px; border: 1px solid #333; }
+        input[type="text"], input[type="number"], input[type="password"] { 
+            width: 90%; padding: 10px; margin: 8px 0; border: 1px solid #555; border-radius: 4px; background-color: #000; color: #fff; 
+        }
+        button { padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
+        .register-btn { background-color: #FFD700; color: #000; } 
+        .deposit-btn { background-color: #4CAF50; color: white; }
+        .withdraw-btn { background-color: #F44336; color: white; }
+        .logout-btn { background-color: #555; margin-top: 20px; }
+        .message { padding: 15px; border-radius: 5px; margin-bottom: 15px; font-weight: bold; }
+        .success { background-color: #b9f6ca; color: #000; } 
+        .error { background-color: #ffcdd2; color: #000; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>لوحة تحكم الوكيل المالي</h1>
+
+        <% if (locals.msg) { %>
+            <div class="message <%= locals.msg.startsWith('✅') ? 'success' : 'error' %>">
+                <%= decodeURIComponent(msg) %>
+            </div>
+        <% } %>
+        
+        <div class="agent-info">
+            <p style="color: #FFD700;">مرحباً بك، الوكيل <%= agentUsername %></p>
+            <p>

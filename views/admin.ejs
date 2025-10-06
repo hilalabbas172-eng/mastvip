@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master VIP - Admin Panel</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #000; color: #fff; font-family: 'Arial', sans-serif;">
+
+    <nav style="display: flex; justify-content: center; padding: 15px 0; background-color: #000; border-bottom: 2px solid #FFD700;">
+        <a href="/" style="color: #FFD700; text-decoration: none; padding: 0 15px; font-weight: bold; transition: color 0.3s; margin: 0 5px; font-family: 'Arial', sans-serif;">Home</a>
+        <a href="/auth" style="color: #FFD700; text-decoration: none; padding: 0 15px; transition: color 0.3s; margin: 0 5px; font-family: 'Arial', sans-serif;">Login/Register</a>
+        <a href="/vip" style="color: #FFD700; text-decoration: none; padding: 0 15px; transition: color 0.3s; margin: 0 5px; font-family: 'Arial', sans-serif;">VIP Levels</a>
+        <a href="/referrals" style="color: #FFD700; text-decoration: none; padding: 0 15px; transition: color 0.3s; margin: 0 5px; font-family: 'Arial', sans-serif;">Referrals</a>
+        <a href="/profile" style="color: #FFD700; text-decoration: none; padding: 0 15px; transition: color 0.3s; margin: 0 5px; font-family: 'Arial', sans-serif;">Profile</a>
+        <a href="/support" style="color: #FFD700; text-decoration: none; padding: 0 15px; transition: color 0.3s; margin: 0 5px; font-family: 'Arial', sans-serif;">Support</a>
+        <a href="/admin" style="color: #FFD700; text-decoration: none; padding: 0 15px; transition: color 0.3s; margin: 0 5px; font-family: 'Arial', sans-serif;">Admin</a>
+    </nav>
+
+    <div style="max-width: 1100px; margin: 40px auto; padding: 20px; text-align: center;">
+        <h1 style="color: #FFD700; margin-bottom: 40px; font-size: 2.5em;">Master VIP Control Panel</h1>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 30px; justify-content: center;">
+            
+            <div style="flex: 1; min-width: 300px; max-width: 500px; background-color: #111; padding: 30px; border-radius: 10px; box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);">
+                <h2 style="color: #FFD700; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 10px;">Overview (Dummy Stats)</h2>
+                
+                <p style="font-size: 1.2em; padding: 10px 0; border-bottom: 1px dashed #333;">
+                    <strong style="color: #FFD700;">Total Users:</strong> <span style="float: right; color: #fff; font-weight: bold;">1,250</span>
+                </p>
+                <p style="font-size: 1.2em; padding: 10px 0; border-bottom: 1px dashed #333;">
+                    <strong style="color: #FFD700;">Total Deposits (24h):</strong> <span style="float: right; color: #4CAF50; font-weight: bold;">$ 8,500</span>
+                </p>
+                <p style="font-size: 1.2em; padding: 10px 0;">
+                    <strong style="color: #FFD700;">Pending Withdrawals:</strong> <span style="float: right; color: #D32F2F; font-weight: bold;">12</span>
+                </p>
+            </div>
+
+            <div style="flex: 1; min-width: 300px; max-width: 500px; background-color: #111; padding: 30px; border-radius: 10px; box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);">
+                <h2 style="color: #4CAF50; margin-top: 0; border-bottom: 1px solid #4CAF50; padding-bottom: 10px;">System Settings</h2>
+
+                <% if (message) { %>
+                    <div style="background-color: #4CAF50; color: white; padding: 10px; margin-bottom: 15px; border-radius: 5px; font-weight: bold;">
+                        <%= message %>
+                    </div>
+                <% } %>
+                
+                <form action="/admin/update-wallet" method="POST">
+                    <label for="wallet-address" style="display: block; text-align: left; margin-bottom: 8px; color: #ccc; font-size: 1em;">
+                        Current Deposit Wallet (TRC20):
+                    </label>
+                    
+                    <input type="text" id="wallet-address" name="newWallet" 
+                           placeholder="Enter New USDT Wallet Address (TRC20)"
+                           value="<%= currentWallet %>" required
+                           style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #FFD700; border-radius: 5px; background-color: #000; color: #fff; font-size: 1em;">
+                    
+                    <button type="submit" 
+                            style="width: 100%; padding: 12px; background-color: #FFD700; color: #000; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; transition: background-color 0.3s; font-size: 1.1em;">
+                        Update Wallet Address
+                    </button>
+                </form>
+            </div>
+            
+            <div style="width: 100%; margin-top: 30px; text-align: center;">
+                <h2 style="color: #FFD700; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px;">Quick Actions</h2>
+                <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+                    <button onclick="alert('Viewing User List...')" style="padding: 15px 30px; background-color: #555; color: #fff; border: none; border-radius: 5px; font-size: 1em; cursor: pointer; transition: background-color 0.3s;">
+                        Manage Users
+                    </button>
+                    <button onclick="alert('Reviewing Deposit Requests...')" style="padding: 15px 30px; background-color: #4CAF50; color: #000; border: none; border-radius: 5px; font-size: 1em; font-weight: bold; cursor: pointer; transition: background-color 0.3s;">
+                        Approve Deposits
+                    </button>
+                    <button onclick="alert('Reviewing Withdrawal Requests...')" style="padding: 15px 30px; background-color: #D32F2F; color: #fff; border: none; border-radius: 5px; font-size: 1em; font-weight: bold; cursor: pointer; transition: background-color 0.3s;">
+                        Process Withdrawals
+                    </button>
+                    <a href="/logout" style="padding: 15px 30px; background-color: #333; color: #FFD700; text-decoration: none; border-radius: 5px; font-size: 1em; font-weight: bold; cursor: pointer; display: inline-block;">
+                        Logout Admin
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
